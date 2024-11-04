@@ -1,6 +1,9 @@
 package sevlet;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -28,6 +31,7 @@ public class EmployeesMainServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		// セッションスコープから情報を取得
 		HttpSession session = request.getSession();
 		TblEmployees loginEmployees = (TblEmployees) session.getAttribute("loginUser");
@@ -36,10 +40,22 @@ public class EmployeesMainServlet extends HttpServlet {
 		if (loginEmployees == null) {
 			response.sendRedirect("index.jsp");
 		} else {
+			LocalDate startDate = LocalDate.now();
 			// 担当クラスの出欠情報を取得し、セッションスコープに保存
+			if (request.getParameter("startDate") != null) {
+				startDate = LocalDate.parse(request.getParameter("startDate"));
+			}
+			startDate = startDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+			LocalDate endDate = startDate.plusDays(6);
 			AttendanceLogic attendanceLogic = new AttendanceLogic();
-			List<TblAttendance> atteList = attendanceLogic.findAtteByEmpl(loginEmployees);
+			List<TblAttendance> atteList = attendanceLogic.findAtteByEmpl(loginEmployees, startDate, endDate);
+			for(TblAttendance tblAttendance: atteList) {
+				tblAttendance.setAtteArriTimeHtml(attendanceLogic.formatJavaDateToHtmlTime(tblAttendance.getAtteArriTime()));
+				tblAttendance.setAtteDepaTimeHtml(attendanceLogic.formatJavaDateToHtmlTime(tblAttendance.getAtteDepaTime()));
+				tblAttendance.setAtteRecordHtml(attendanceLogic.formatJavaDateToHtmlTimeMMDD(tblAttendance.getAtteRecord()));
+			}
 			session.setAttribute("atteList", atteList);
+			session.setAttribute("startDate", startDate);
 
 			// フォワード
 			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/employeesMain.jsp");

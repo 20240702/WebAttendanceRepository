@@ -1,3 +1,4 @@
+<%@page import="java.time.LocalDate"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -5,6 +6,7 @@
 <%
 // セッションスコープに保存された出欠情報を取得
 List<TblAttendance> atteList = (List<TblAttendance>) session.getAttribute("atteList");
+LocalDate startDate = (LocalDate)session.getAttribute("startDate");
 %>
 <!DOCTYPE html>
 <html lang="ja">
@@ -106,8 +108,16 @@ h1 {
 				name="yearMonthKey" required> <input type="submit"
 				class="button" value="出席簿を表示">
 		</form>
+		<form action="EmployeesMainServlet" method="get">
+		<input type="hidden" name="startDate" value="<%= startDate.minusDays(7) %>">
+		<button type="submit">前の週へ</button>
+		</form>
+		<form action="EmployeesMainServlet" method="get">
+		<input type="hidden" name="startDate" value="<%= startDate.plusDays(7) %>">
+		<button type="submit">次の週へ</button>
+		</form>
 		<%
-		if (atteList != null) {
+		if (atteList.size()!=0) {
 			for (int i = 0; i < atteList.size(); i++) {
 				TblAttendance atte = atteList.get(i);
 		%>
@@ -117,12 +127,12 @@ h1 {
 			</p>
 			<p>
 				出欠:
-				<%=atte.getAtteRecoad()%>, ステータス:
+				<%=atte.getAtteRecordHtml()%>, ステータス:
 				<%=atte.getAtteStatus()%></p>
 			<p>
 				到着時刻:
-				<%=atte.getAtteArriTime()%>, 退室時刻:
-				<%=atte.getAtteDepaTime()%></p>
+				<%=atte.getAtteArriTimeHtml()%>, 退室時刻:
+				<%=atte.getAtteDepaTimeHtml()%></p>
 			<p>
 				備考:
 				<%=atte.getAtteInf()%></p>

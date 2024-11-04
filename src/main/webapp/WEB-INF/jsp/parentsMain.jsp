@@ -115,7 +115,7 @@ h1 {
 			</p>
 			<p>
 				出欠:
-				<%=atte.getAtteRecoad()%>, ステータス:
+				<%=t(atte.%>, ステータス:
 				<%=atte.getAtteStatus()%></p>
 			<p>
 				到着時刻:

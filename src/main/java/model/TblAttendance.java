@@ -9,8 +9,8 @@ public class TblAttendance implements Serializable {
 	private String beloClass;
 	private String studCode;
 	private String studName;
-	private Date atteRecoad;
-	private String atteRecoadHtml;
+	private Date atteRecord;
+	private String atteRecordHtml;
 	private String atteStatus;
 	private String atteInf;
 	private Date atteArriTime;
@@ -28,7 +28,7 @@ public class TblAttendance implements Serializable {
 		this.beloGrade = beloGrade;
 		this.studCode = studCode;
 		this.studName = studName;
-		this.atteRecoad = atteRecoad;
+		this.atteRecord = atteRecoad;
 		this.atteStatus = atteStatus;
 		this.atteInf = atteInf;
 		this.atteArriTime = atteArriTime;
@@ -58,8 +58,8 @@ public class TblAttendance implements Serializable {
 	public void setAtteDepaTimeHtml(String atteDepaTimeHtml) {
 		this.atteDepaTimeHtml = atteDepaTimeHtml;
 	}
-	public void setAtteRecoad(String atteRecoedHtml) {
-		this.atteRecoadHtml = atteRecoedHtml;
+	public void setAtteRecordHtml(String atteRecordHtml) {
+		this.atteRecordHtml = atteRecordHtml;
 	}
 
 	public String getSchoCode() {
@@ -81,12 +81,12 @@ public class TblAttendance implements Serializable {
 		return studName;
 	}
 
-	public Date getAtteRecoad() {
-		return atteRecoad;
+	public Date getAtteRecord() {
+		return atteRecord;
 	}
 	
 	public String getAtteRecordHtml() {
-		return atteRecoadHtml;
+		return atteRecordHtml;
 	}
 	
 	public String getAtteStatus() {

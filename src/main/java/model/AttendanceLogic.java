@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import dao.TblAttendanceDAO;
 
@@ -17,9 +18,9 @@ public class AttendanceLogic {
 		return atteList;
 	}
 
-	public List<TblAttendance> findAtteByEmpl(TblEmployees tblEmployees) {
+	public List<TblAttendance> findAtteByEmpl(TblEmployees tblEmployees, LocalDate startDate, LocalDate endDate) {
 		TblAttendanceDAO dao = new TblAttendanceDAO();
-		List<TblAttendance> atteList = dao.findAtteByEmpl(tblEmployees);
+		List<TblAttendance> atteList = dao.findAtteByEmpl(tblEmployees, startDate, endDate);
 		return atteList;
 	}
 
@@ -102,6 +103,11 @@ public class AttendanceLogic {
 
 	public String formatJavaDateToHtmlTime(java.util.Date date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+		String htmlDate = dateFormat.format(date);
+		return htmlDate;
+	}
+	public String formatJavaDateToHtmlTimeMMDD(java.util.Date date) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("M/d (E)", Locale.JAPANESE);
 		String htmlDate = dateFormat.format(date);
 		return htmlDate;
 	}

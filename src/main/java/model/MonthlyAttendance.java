@@ -11,9 +11,12 @@ public class MonthlyAttendance {
 	private Integer sumKibiki;
 	
 	public MonthlyAttendance() {}
-	public MonthlyAttendance(Integer studCode, String studName, String[] atteRecords) {
+	public MonthlyAttendance(Integer studCode, String studName) {
 		this.studCode = studCode;
 		this.studName = studName;
+	}
+	
+	public void setAtteRecords(String[] atteRecords) {
 		this.atteRecords = atteRecords;
 	}
 	

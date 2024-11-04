@@ -4,7 +4,9 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import model.MonthlyAttendance;
@@ -73,7 +75,7 @@ public class TblAttendanceDAO {
 		return atteList;
 	}
 
-	public List<TblAttendance> findAtteByEmpl(TblEmployees tblEmployees) {
+	public List<TblAttendance> findAtteByEmpl(TblEmployees tblEmployees, LocalDate startDate, LocalDate endDate) {
 		List<TblAttendance> atteList = new ArrayList<>(); // 検索結果を保存するArrayList
 		String beloGrade = tblEmployees.getBeloGrade(); // 検索キーとする学年
 		String beloClass = tblEmployees.getBeloClass(); // 検索キーとする組
@@ -93,11 +95,14 @@ public class TblAttendanceDAO {
 			String sql = "SELECT scho_code,belo_grade,belo_class,stud_code,stud_name,atte_recoad,atte_status,"
 					+ "atte_information,atte_arri_time,atte_depa_time,atte_remarks,atte_upda_time FROM TBL_Attendance "
 					+ "JOIN TBL_Students USING(scho_code,belo_grade,belo_class,stud_code) "
-					+ "WHERE belo_grade = ? AND belo_class = ? AND scho_code = (SELECT scho_code FROM TBL_Employees WHERE empl_code = ?)";
+					+ "WHERE belo_grade = ? AND belo_class = ? AND scho_code = (SELECT scho_code FROM TBL_Employees WHERE empl_code = ?) "
+					+ "AND (atte_recoad BETWEEN ? AND ?)";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, beloGrade);
 			pStmt.setString(2, beloClass);
 			pStmt.setString(3, emplCode);
+			pStmt.setDate(4, Date.valueOf(startDate));
+			pStmt.setDate(5, Date.valueOf(endDate));
 
 			//SELECT文を実行し、結果表を取得
 			ResultSet rs = pStmt.executeQuery();
@@ -160,7 +165,7 @@ public class TblAttendanceDAO {
 			pStmt.setString(7, tblAttendance.getBeloClass());
 			pStmt.setString(8, tblAttendance.getStudCode());
 			pStmt.setString(9, tblAttendance.getSchoCode());
-			Date atteRecoadSql = new Date(tblAttendance.getAtteRecoad().getTime());
+			Date atteRecoadSql = new Date(tblAttendance.getAtteRecord().getTime());
 			pStmt.setDate(10, atteRecoadSql);
 
 			pStmt.executeUpdate();
@@ -201,7 +206,7 @@ public class TblAttendanceDAO {
 			pStmt.setString(7, tblAttendance.getBeloClass());
 			pStmt.setString(8, tblAttendance.getStudCode());
 			pStmt.setString(9, tblAttendance.getSchoCode());
-			Date atteRecoadSql = new Date(tblAttendance.getAtteRecoad().getTime());
+			Date atteRecoadSql = new Date(tblAttendance.getAtteRecord().getTime());
 			pStmt.setDate(10, atteRecoadSql);
 
 			pStmt.executeUpdate();
@@ -234,7 +239,7 @@ public class TblAttendanceDAO {
 			pStmt.setString(2, tblAttendance.getBeloGrade());
 			pStmt.setString(3, tblAttendance.getBeloClass());
 			pStmt.setString(4, tblAttendance.getStudCode());
-			Date atteRecoadSql = new Date(tblAttendance.getAtteRecoad().getTime());
+			Date atteRecoadSql = new Date(tblAttendance.getAtteRecord().getTime());
 			pStmt.setDate(5, atteRecoadSql);
 			pStmt.setString(6, tblAttendance.getAtteStatus());
 			pStmt.setString(7, tblAttendance.getAtteInf());
@@ -274,7 +279,7 @@ public class TblAttendanceDAO {
 			pStmt.setString(2, tblAttendance.getBeloGrade());
 			pStmt.setString(3, tblAttendance.getBeloClass());
 			pStmt.setString(4, tblAttendance.getStudCode());
-			Date atteRecoadSql = new Date(tblAttendance.getAtteRecoad().getTime());
+			Date atteRecoadSql = new Date(tblAttendance.getAtteRecord().getTime());
 			pStmt.setDate(5, atteRecoadSql);
 			pStmt.setString(6, tblAttendance.getAtteStatus());
 			pStmt.setString(7, tblAttendance.getAtteInf());
@@ -314,7 +319,7 @@ public class TblAttendanceDAO {
 			pStmt.setString(2, tblAttendance.getBeloGrade());
 			pStmt.setString(3, tblAttendance.getBeloClass());
 			pStmt.setString(4, tblAttendance.getStudCode());
-			Date atteRecoadSql = new Date(tblAttendance.getAtteRecoad().getTime());
+			Date atteRecoadSql = new Date(tblAttendance.getAtteRecord().getTime());
 			pStmt.setDate(5, atteRecoadSql);
 
 			pStmt.executeUpdate();
@@ -346,7 +351,7 @@ public class TblAttendanceDAO {
 			pStmt.setString(2, tblAttendance.getBeloGrade());
 			pStmt.setString(3, tblAttendance.getBeloClass());
 			pStmt.setString(4, tblAttendance.getStudCode());
-			Date atteRecoadSql = new Date(tblAttendance.getAtteRecoad().getTime());
+			Date atteRecoadSql = new Date(tblAttendance.getAtteRecord().getTime());
 			pStmt.setDate(5, atteRecoadSql);
 
 			pStmt.executeUpdate();
@@ -378,7 +383,7 @@ public class TblAttendanceDAO {
 //			本当はWHERE句にscho_codeも必要
 			String sql = "SELECT stud_code,stud_name, TO_CHAR(atte_recoad,'DD') AS atte_day,atte_status,atte_information "
 					+ "FROM TBL_Attendance "
-//					+ "RIGHT "
+					+ "RIGHT "
 					+ "JOIN TBL_Students USING (belo_grade,belo_class,stud_code) WHERE belo_grade=? AND belo_class=? "
 					+ "AND (TO_CHAR(atte_recoad,'YYYY-MM')=? OR atte_recoad IS NULL) ORDER BY stud_code";
 			
@@ -392,24 +397,64 @@ public class TblAttendanceDAO {
 
 			//SELECT文を実行し、結果表を取得
 			ResultSet rs = pStmt.executeQuery();
+			
+			// 出欠情報関係なく、所属生徒を得る
+			String sqlAllStud = "SELECT DISTINCT stud_code, stud_name FROM TBL_Students WHERE belo_grade=? AND belo_class=?"
+					+ "ORDER BY stud_code";
+			PreparedStatement pStmt2 = conn.prepareStatement(sqlAllStud, ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			pStmt2.setString(1, beloGrade);
+			pStmt2.setString(2, beloClass);
+			ResultSet rsAllStud = pStmt2.executeQuery();
+			
+			// 生徒数分の配列用意
+			rsAllStud.last();
+			int nRows = rsAllStud.getRow();
+			rsAllStud.beforeFirst();
+			String[] allStudNames = new String[nRows];
+			
+			// 出欠情報のない、空状態でmonthlyAttendanceインスタンスを生徒数分だけ作成
+			int i=0;
+			while (rsAllStud.next()) {
+				String studName = rsAllStud.getString("stud_name");
+				Integer studCode = rsAllStud.getInt("stud_code");
+				MonthlyAttendance monthlyAttendance = new MonthlyAttendance(studCode, studName);
+				String[] blankAtteRecords = new String[daysOfMonth];
+				Arrays.fill(blankAtteRecords, "");
+				monthlyAttendance.setAtteRecords(blankAtteRecords);
+				atteList.add(monthlyAttendance);
+				allStudNames[i] = studName;
+				i++;
+			}
 		
 
 			String previousStudName = ""; // 1つ前のレコードの生徒名を保持するための変数。
 			Integer previousStudCode = 0;
 			String[] monthlyAtteStatus = new String[daysOfMonth];
-			java.util.Arrays.fill(monthlyAtteStatus, "");
+			Arrays.fill(monthlyAtteStatus, "");
 			int sumByoketsu = 0;
 			int sumKaji = 0;
 			int sumShuttei = 0;
 			int sumKibiki = 0;
+			Integer targetIndex = null;
 
 			while (rs.next()) {
 				String studName = rs.getString("stud_name");
 
 				// 前の生徒名と違うかつ1行目ではない場合、これまでのデータをインスタンスに保存する。
 				if (!rs.isFirst() && !studName.equals(previousStudName)) {
+					// atteListの何番目のインスタンスに情報を保存すればよいか特定する
+					for (int j=0; j<atteList.size(); j++) {
+						if (studName.equals(allStudNames[j])) {
+							targetIndex = j;
+							break;
+						}
+					}
+//					MonthlyAttendance monthlyAttendance = new MonthlyAttendance(previousStudCode, previousStudName);
+					MonthlyAttendance monthlyAttendance = atteList.get(targetIndex);
+					targetIndex = null;
 					String[] data = monthlyAtteStatus.clone();
-					MonthlyAttendance monthlyAttendance = new MonthlyAttendance(previousStudCode, previousStudName, data);
+					monthlyAttendance.setAtteRecords(data);
 					monthlyAttendance.setSumByoketsu(sumByoketsu);
 					monthlyAttendance.setSumKaji(sumKaji);
 					monthlyAttendance.setSumShuttei(sumShuttei);
@@ -417,10 +462,10 @@ public class TblAttendanceDAO {
 					monthlyAttendance.setSumShusseki(openDays - sumByoketsu - sumKaji - sumKibiki - sumShuttei);
 
 					// ArrayListに追加
-					atteList.add(monthlyAttendance);
+//					atteList.add(monthlyAttendance);
 
 					// 初期化
-					for (int i = 0; i < monthlyAtteStatus.length; i++) {
+					for (int k = 0; k < monthlyAtteStatus.length; k++) {
 						monthlyAtteStatus[i] = "";
 					}
 					sumByoketsu = 0;
@@ -456,8 +501,17 @@ public class TblAttendanceDAO {
 
 				// 最終行の場合、上と同じくインスタンスに保存。
 				if (rs.isLast()) {
+					for (int j=0; j<atteList.size(); j++) {
+						if (studName.equals(allStudNames[j])) {
+							targetIndex = j;
+							break;
+						}
+					}
 					String[] data = monthlyAtteStatus.clone();
-					MonthlyAttendance monthlyAttendance = new MonthlyAttendance(studCode, studName, data);
+//					MonthlyAttendance monthlyAttendance = new MonthlyAttendance(studCode, studName);
+					MonthlyAttendance monthlyAttendance = atteList.get(targetIndex);
+					targetIndex = null;
+					monthlyAttendance.setAtteRecords(data);
 					monthlyAttendance.setSumByoketsu(sumByoketsu);
 					monthlyAttendance.setSumKaji(sumKaji);
 					monthlyAttendance.setSumShuttei(sumShuttei);
@@ -465,7 +519,7 @@ public class TblAttendanceDAO {
 					monthlyAttendance.setSumShusseki(openDays - sumByoketsu - sumKaji - sumKibiki - sumShuttei);
 
 					// ArrayListに追加
-					atteList.add(monthlyAttendance);
+//					atteList.add(monthlyAttendance);
 				}
 			}
 		} catch (java.sql.SQLException e) {
