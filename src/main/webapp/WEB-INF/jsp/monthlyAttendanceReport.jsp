@@ -51,8 +51,17 @@ table {
 	width: 100%;
 	border-collapse: collapse;
 	margin-top: 20px;
-	display: flex;
-	justify-content: center;
+<!--	display: flex;-->
+<!--	justify-content: center;-->
+display: -webkit-box;
+display: -webkit-flex;
+display: -ms-flexbox;
+display: flex;
+-webkit-justify-content: center;
+-ms-flex-pack: center;
+justify-content: center;
+
+
 }
 
 th, td {
@@ -61,9 +70,7 @@ th, td {
 	border: 1px solid #ccc;
 }
 
-th {<!--
-	background-color: #283b5b; --> <!--
-	color: #fff; -->
+th {
 	color: #283b5b;
 }
 

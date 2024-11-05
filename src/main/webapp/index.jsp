@@ -71,7 +71,7 @@
 	<div class="container">
 		<div class="button-container">
 			<a href="LoginServlet?userType=parents" class="button">欠席・遅刻・早退
-				連絡はこちら（保護者の方）</a>
+				連絡はこちら<br>（保護者の方）</a>
 		</div>
 
 		<div class="button-container">
