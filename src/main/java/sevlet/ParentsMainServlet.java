@@ -38,6 +38,11 @@ public class ParentsMainServlet extends HttpServlet {
 			// 自分の子どもの出欠情報を取得し、リクエストスコープに保存
 			AttendanceLogic attendanceLogic = new AttendanceLogic();
 			List<TblAttendance> atteList = attendanceLogic.findAtteByPare(loginParents);
+			for(TblAttendance tblAttendance: atteList) {
+				tblAttendance.setAtteArriTimeHtml(attendanceLogic.formatJavaDateToHtmlTime(tblAttendance.getAtteArriTime()));
+				tblAttendance.setAtteDepaTimeHtml(attendanceLogic.formatJavaDateToHtmlTime(tblAttendance.getAtteDepaTime()));
+				tblAttendance.setAtteRecordHtml(attendanceLogic.formatJavaDateToHtmlTimeMMDD(tblAttendance.getAtteRecord()));
+			}
 			session.setAttribute("atteList", atteList);
 
 			// フォワード

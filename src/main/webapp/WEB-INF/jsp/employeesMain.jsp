@@ -126,16 +126,19 @@ h1 {
 				名前: <strong><%=atte.getStudName()%></strong>
 			</p>
 			<p>
-				出欠:
-				<%=atte.getAtteRecordHtml()%>, ステータス:
+				日付:
+				<%=atte.getAtteRecordHtml()%>, 出欠等:
 				<%=atte.getAtteStatus()%></p>
 			<p>
-				到着時刻:
-				<%=atte.getAtteArriTimeHtml()%>, 退室時刻:
+				登校時刻:
+				<%=atte.getAtteArriTimeHtml()%>, 下校時刻:
 				<%=atte.getAtteDepaTimeHtml()%></p>
 			<p>
-				備考:
+				詳細情報:
 				<%=atte.getAtteInf()%></p>
+			<p>
+				備考:
+				<%=atte.getAtteRemarks()%></p>
 
 			<form action="EmployeesMainServlet" method="post" class="form-inline">
 				<input type="hidden" name="indexData" value="<%=i%>"> <input

@@ -84,7 +84,7 @@
 <body>
     <div class="container">
         <h1>削除確認</h1>
-        <p class="message">${delTblAttendance.atteRecoad}の${delTblAttendance.studName}さんの出欠情報を削除してもよろしいですか？</p>
+        <p class="message">${delTblAttendance.atteRecord}の${delTblAttendance.studName}さんの出欠情報を削除してもよろしいですか？</p>
         <form action="EmployeesMainServlet" method="post">
             <input type="hidden" name="process" value="executeDeleteAtte">
             <div class="button-container">
